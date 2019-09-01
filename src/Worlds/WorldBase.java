@@ -36,6 +36,7 @@ public abstract class WorldBase {
     public Boolean[][] playerLocation;
 
     public LinkedList<Tail> body = new LinkedList<>();
+    
 
 
     public WorldBase(Handler handler){
@@ -52,10 +53,11 @@ public abstract class WorldBase {
     }
 
     public void render(Graphics g){
+    	Color gridColor = new Color(128, 0, 128);
 
         for (int i = 0; i <= 800; i = i + GridPixelsize) {
 
-            g.setColor(Color.white);
+            g.setColor(gridColor);
             g.drawLine(0, i, handler.getWidth() , i);
             g.drawLine(i,0,i,handler.getHeight());
 

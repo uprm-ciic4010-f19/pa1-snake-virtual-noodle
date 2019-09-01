@@ -47,7 +47,9 @@ public class Player {
             direction="Left";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
             direction="Right";
-        }
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)) {
+        	lenght++;
+        } //Attempt to add debug key
 
     }
 
@@ -104,7 +106,7 @@ public class Player {
         Random r = new Random();
         for (int i = 0; i < handler.getWorld().GridWidthHeightPixelCount; i++) {
             for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
-                g.setColor(Color.WHITE);
+                g.setColor(Color.GREEN);
 
                 if(playeLocation[i][j]||handler.getWorld().appleLocation[i][j]){
                     g.fillRect((i*handler.getWorld().GridPixelsize),

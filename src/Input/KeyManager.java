@@ -13,6 +13,7 @@ public class KeyManager implements KeyListener {
 	private boolean[] keys,justPressed,cantPress;
 	public boolean up=false, down=false, left=false, right=false;
 	public boolean pbutt=false;
+	public boolean tailPlus = false; // Add a tail when pressing N
 
 
 	public KeyManager(){
@@ -43,6 +44,8 @@ public class KeyManager implements KeyListener {
 		right = keys[KeyEvent.VK_D];
 
 		pbutt = keys[KeyEvent.VK_ESCAPE];
+		
+		tailPlus = keys[KeyEvent.VK_N]; // Press N to add a tail
 
 	}
 
