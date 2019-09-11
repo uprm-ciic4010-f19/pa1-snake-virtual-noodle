@@ -57,8 +57,8 @@ public class Player {
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_EQUALS)) { //slower
         	speed++;
         }
-        //Attempt to add debug key
-
+        //Use an int for the apple's health and boolean to make a bad apple TODO
+        
     }
 
     public void checkCollisionAndMove(){
