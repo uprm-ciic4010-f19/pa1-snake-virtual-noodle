@@ -19,7 +19,8 @@ public class Player {
     public int yCoord;
 
     public int moveCounter;
-
+    
+    public int speed;
     public String direction;//is your first name one?
 
     public Player(Handler handler){
@@ -30,12 +31,13 @@ public class Player {
         direction= "Right";
         justAte = false;
         lenght= 1;
+        speed = 5;
 
     }
 
     public void tick(){
         moveCounter++;
-        if(moveCounter>=5) {
+        if(moveCounter>=speed) {
             checkCollisionAndMove();
             moveCounter=0;
         }
@@ -48,14 +50,12 @@ public class Player {
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
             direction="Right";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)) {
-//        	Tail newTail = new Tail(xCoord, yCoord, handler);
         	handler.getWorld().body.addFirst(new Tail(xCoord, yCoord, handler)); // add done
         } 
-        //TODO Fix the movecounter
-        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS)) {
-        	handler.getWorld().player.moveCounter--;
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_EQUALS)) {
-        	handler.getWorld().player.moveCounter++;
+        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS)) { //faster
+        	speed--;
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_EQUALS)) { //slower
+        	speed++;
         }
         //Attempt to add debug key
 
