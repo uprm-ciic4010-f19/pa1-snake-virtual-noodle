@@ -48,8 +48,16 @@ public class Player {
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
             direction="Right";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)) {
-        	lenght++;
-        } //Attempt to add debug key
+//        	Tail newTail = new Tail(xCoord, yCoord, handler);
+        	handler.getWorld().body.addFirst(new Tail(xCoord, yCoord, handler)); // add done
+        } 
+        //TODO Fix the movecounter
+        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS)) {
+        	handler.getWorld().player.moveCounter--;
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_EQUALS)) {
+        	handler.getWorld().player.moveCounter++;
+        }
+        //Attempt to add debug key
 
     }
 
