@@ -5,19 +5,22 @@ import Main.Handler;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import Game.GameStates.State;
+import Main.GameSetUp;
 
 /**
  * Created by AlexVR on 7/2/2018.
  */
 public class Player {
-
-    public int lenght;
+	private int score = 0; //score
+    public int length;
     public boolean justAte;
     private Handler handler;
+    static public boolean red;
 
     public int xCoord;
     public int yCoord;
-
+    
     public int moveCounter;
     
     public int speed;
@@ -30,9 +33,17 @@ public class Player {
         moveCounter = 0;
         direction= "Right";
         justAte = false;
-        lenght= 1;
+        length= 1;
         speed = 5;
+        red = true;
 
+    }
+    // sets whether or not the apple is good healthy
+    static boolean isHealthy() {
+    	return red;
+    }
+    static void setHealthy(boolean isGood) {
+    	 red = isGood;
     }
 
     public void tick(){
@@ -41,13 +52,13 @@ public class Player {
             checkCollisionAndMove();
             moveCounter=0;
         }
-        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)){
+        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP) && direction!= "Down"){
             direction="Up";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN) && direction!= "Up"){
             direction="Down";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT) && direction!= "Right"){
             direction="Left";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT) && direction!= "Left"){
             direction="Right";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)) {
         	handler.getWorld().body.addFirst(new Tail(xCoord, yCoord, handler)); // add done
@@ -56,6 +67,8 @@ public class Player {
         	speed--;
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_EQUALS)) { //slower
         	speed++;
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_ESCAPE)) { // set the pause
+        	State.setState(GameSetUp.pauseState);
         }
         //Use an int for the apple's health and boolean to make a bad apple TODO
         
@@ -68,38 +81,43 @@ public class Player {
         switch (direction){
             case "Left":
                 if(xCoord==0){
-                    kill();
+                	xCoord = handler.getWorld().GridWidthHeightPixelCount-1;
+                   // kill();
                 }else{
                     xCoord--;
                 }
                 break;
             case "Right":
                 if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                	xCoord = 0;
+//                    kill();
                 }else{
                     xCoord++;
                 }
                 break;
             case "Up":
                 if(yCoord==0){
-                    kill();
+                	yCoord = handler.getWorld().GridWidthHeightPixelCount-1;
+                    //kill();
                 }else{
                     yCoord--;
                 }
                 break;
             case "Down":
                 if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                    yCoord = 0;
+                	//kill();
                 }else{
                     yCoord++;
                 }
                 break;
         }
         handler.getWorld().playerLocation[xCoord][yCoord]=true;
-
+       
 
         if(handler.getWorld().appleLocation[xCoord][yCoord]){
             Eat();
+            score+= Math.sqrt((2*score+1)); //Score calculations
         }
 
         if(!handler.getWorld().body.isEmpty()) {
@@ -107,7 +125,12 @@ public class Player {
             handler.getWorld().body.removeLast();
             handler.getWorld().body.addFirst(new Tail(x, y,handler));
         }
-
+       //Snake kills itself when it eats its booty
+        for(int i=0; i< handler.getWorld().body.size(); i++) {
+        	if((handler.getWorld().body.get(i).x==xCoord) && (handler.getWorld().body.get(i).y == yCoord)) {
+        		kill();
+        	}
+        }
     }
 
     public void render(Graphics g,Boolean[][] playeLocation){
@@ -125,12 +148,13 @@ public class Player {
 
             }
         }
-
-
+        //score is displayed
+        g.setColor(Color.white);
+        g.setFont(new Font("Ariel", Font.ITALIC, 12));
+        g.drawString("Score: " + score, 600, 10);
     }
-
     public void Eat(){
-        lenght++;
+        length++;
         Tail tail= null;
         handler.getWorld().appleLocation[xCoord][yCoord]=false;
         handler.getWorld().appleOnBoard=false;
@@ -235,16 +259,18 @@ public class Player {
         }
         handler.getWorld().body.addLast(tail);
         handler.getWorld().playerLocation[tail.x][tail.y] = true;
+        speed--; // everytime it eats an apple, it gets faster
+       
     }
 
     public void kill(){
-        lenght = 0;
+        length = 0;
         for (int i = 0; i < handler.getWorld().GridWidthHeightPixelCount; i++) {
             for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
 
                 handler.getWorld().playerLocation[i][j]=false;
-
             }
+            State.setState(GameSetUp.gameOverState);
         }
     }
 

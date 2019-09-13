@@ -5,6 +5,7 @@ import Game.GameStates.GameState;
 import Game.GameStates.MenuState;
 import Game.GameStates.PauseState;
 import Game.GameStates.State;
+import Game.GameStates.GameOverState;
 import Input.KeyManager;
 import Input.MouseManager;
 import Resources.Images;
@@ -42,9 +43,10 @@ public class GameSetUp implements Runnable {
     private Handler handler;
 
     //States
-    public State gameState;
-    public State menuState;
-    public State pauseState;
+    public static State gameState;
+    public static State menuState;
+    public static State pauseState;
+    public static State gameOverState;
 
     //Res.music
     private InputStream audioFile;
@@ -81,6 +83,7 @@ public class GameSetUp implements Runnable {
         gameState = new GameState(handler);
         menuState = new MenuState(handler);
         pauseState = new PauseState(handler);
+        gameOverState = new GameOverState(handler); //game Over state
 
         State.setState(menuState);
 
