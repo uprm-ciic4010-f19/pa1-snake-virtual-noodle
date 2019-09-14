@@ -149,7 +149,7 @@ public class Player {
                             handler.getWorld().GridPixelsize);
                 } //make the apple red
 
-                if(handler.getWorld().appleLocation[i][j]&& Apple.isHealthy) {
+                if(handler.getWorld().appleLocation[i][j]) {
                     g.setColor(Color.RED);
                 	g.fillRect((i*handler.getWorld().GridPixelsize),
                             (j*handler.getWorld().GridPixelsize),
