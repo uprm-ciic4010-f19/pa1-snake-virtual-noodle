@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 import Game.GameStates.State;
 import Main.GameSetUp;
+import Game.Entities.Static.Apple;
 
 /**
  * Created by AlexVR on 7/2/2018.
@@ -16,13 +17,12 @@ public class Player {
     public int length;
     public boolean justAte;
     private Handler handler;
-    static public boolean red;
-
+    
     public int xCoord;
     public int yCoord;
     
     public int moveCounter;
-    
+    public int steps;
     public int speed;
     public String direction;//is your first name one?
 
@@ -34,23 +34,23 @@ public class Player {
         direction= "Right";
         justAte = false;
         length= 1;
-        speed = 5;
-        red = true;
+        speed = 3;
+        steps = 0;
 
     }
-    // sets whether or not the apple is good healthy
-    static boolean isHealthy() {
-    	return red;
+    public void checkApple() {
+        if(steps >= 10) {
+        	Apple.isHealthy = false;
+        }
     }
-    static void setHealthy(boolean isGood) {
-    	 red = isGood;
-    }
-
+ 
     public void tick(){
         moveCounter++;
+        steps++;
         if(moveCounter>=speed) {
             checkCollisionAndMove();
             moveCounter=0;
+            steps=0;
         }
         if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP) && direction!= "Down"){
             direction="Up";
@@ -61,7 +61,7 @@ public class Player {
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT) && direction!= "Left"){
             direction="Right";
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_N)) {
-        	handler.getWorld().body.addFirst(new Tail(xCoord, yCoord, handler)); // add done
+        	handler.getWorld().body.addFirst(new Tail(xCoord, yCoord, handler)); // add tail
         } 
         if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS)) { //faster
         	speed--;
@@ -70,8 +70,7 @@ public class Player {
         }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_ESCAPE)) { // set the pause
         	State.setState(GameSetUp.pauseState);
         }
-        //Use an int for the apple's health and boolean to make a bad apple TODO
-        
+        checkApple();
     }
 
     public void checkCollisionAndMove(){
@@ -118,7 +117,11 @@ public class Player {
         if(handler.getWorld().appleLocation[xCoord][yCoord]){
             Eat();
             score+= Math.sqrt((2*score+1)); //Score calculations
+            if(Apple.isHealthy == false) {
+            	score -= Math.sqrt((2*score+1));
+            }
         }
+
 
         if(!handler.getWorld().body.isEmpty()) {
             handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
@@ -139,8 +142,23 @@ public class Player {
             for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
                 g.setColor(Color.GREEN);
 
-                if(playeLocation[i][j]||handler.getWorld().appleLocation[i][j]){
+                if(playeLocation[i][j]){ //||handler.getWorld().appleLocation[i][j]
                     g.fillRect((i*handler.getWorld().GridPixelsize),
+                            (j*handler.getWorld().GridPixelsize),
+                            handler.getWorld().GridPixelsize,
+                            handler.getWorld().GridPixelsize);
+                } //make the apple red
+
+                if(handler.getWorld().appleLocation[i][j]&& Apple.isHealthy) {
+                    g.setColor(Color.RED);
+                	g.fillRect((i*handler.getWorld().GridPixelsize),
+                            (j*handler.getWorld().GridPixelsize),
+                            handler.getWorld().GridPixelsize,
+                            handler.getWorld().GridPixelsize);
+                } // attempt to make it gray
+                else if(Apple.isHealthy == false) {
+                	g.setColor(Color.DARK_GRAY);
+                	g.fillRect((i*handler.getWorld().GridPixelsize),
                             (j*handler.getWorld().GridPixelsize),
                             handler.getWorld().GridPixelsize,
                             handler.getWorld().GridPixelsize);
@@ -148,6 +166,9 @@ public class Player {
 
             }
         }
+//        if(isHealthy==false) {
+//        	g.setColor(Color.DARK_GRAY);
+//        }
         //score is displayed
         g.setColor(Color.white);
         g.setFont(new Font("Ariel", Font.ITALIC, 12));
@@ -257,6 +278,7 @@ public class Player {
                 }
                 break;
         }
+        
         handler.getWorld().body.addLast(tail);
         handler.getWorld().playerLocation[tail.x][tail.y] = true;
         speed--; // everytime it eats an apple, it gets faster
