@@ -81,7 +81,6 @@ public class Player {
             case "Left":
                 if(xCoord==0){
                 	xCoord = handler.getWorld().GridWidthHeightPixelCount-1;
-                   // kill();
                 }else{
                     xCoord--;
                 }
@@ -89,7 +88,6 @@ public class Player {
             case "Right":
                 if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
                 	xCoord = 0;
-//                    kill();
                 }else{
                     xCoord++;
                 }
@@ -97,7 +95,6 @@ public class Player {
             case "Up":
                 if(yCoord==0){
                 	yCoord = handler.getWorld().GridWidthHeightPixelCount-1;
-                    //kill();
                 }else{
                     yCoord--;
                 }
@@ -105,7 +102,6 @@ public class Player {
             case "Down":
                 if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
                     yCoord = 0;
-                	//kill();
                 }else{
                     yCoord++;
                 }
@@ -142,7 +138,7 @@ public class Player {
             for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
                 g.setColor(Color.GREEN);
 
-                if(playeLocation[i][j]){ //||handler.getWorld().appleLocation[i][j]
+                if(playeLocation[i][j]){
                     g.fillRect((i*handler.getWorld().GridPixelsize),
                             (j*handler.getWorld().GridPixelsize),
                             handler.getWorld().GridPixelsize,
@@ -166,9 +162,6 @@ public class Player {
 
             }
         }
-//        if(isHealthy==false) {
-//        	g.setColor(Color.DARK_GRAY);
-//        }
         //score is displayed
         g.setColor(Color.white);
         g.setFont(new Font("Ariel", Font.ITALIC, 12));
